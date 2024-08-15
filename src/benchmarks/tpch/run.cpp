@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
           << "Usage: ./" << argv[0]
           << "<number of repetitions> <path to tpch dir> [nrThreads = all] \n "
              " EnvVars: [vectorSize = 1024] [SIMDhash = 0] [SIMDjoin = 0] "
-             "[SIMDsel = 0]";
+             "[SIMDsel = 0]" << std::endl;
       exit(1);
    }
 
@@ -72,7 +72,8 @@ int main(int argc, char* argv[]) {
            insert_iterator<decltype(q)>(q, q.begin()));
    }
 
-   tbb::task_scheduler_init scheduler(nrThreads);
+   // tbb::task_scheduler_handler scheduler(nrThreads);
+   tbb::global_control c(tbb::global_control::max_allowed_parallelism, nrThreads);
    if (q.count("1h"))
       e.timeAndProfile("q1 hyper     ", nrTuples(tpch, {"lineitem"}),
                        [&]() {
@@ -187,6 +188,6 @@ int main(int argc, char* argv[]) {
              escape(&result);
           },
           repetitions);
-   scheduler.terminate();
+   // scheduler.terminate();
    return 0;
 }

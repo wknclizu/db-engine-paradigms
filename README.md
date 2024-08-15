@@ -12,6 +12,16 @@ mkdir -p build/release
 cd build/release
 cmake -DCMAKE_BUILD_TYPE=Release ../..
 make
+
+mkdir -p build/debug
+cd build/debug
+cmake -DCMAKE_BUILD_TYPE=Debug ../..
+make -j
+
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug ../..
+cd ../..
+rm compile_commands.json
+ln -s build/debug/compile_commands.json compile_commands.json
 ```
 
 This creates among others the main binaries test\_all and run\_tpch.
